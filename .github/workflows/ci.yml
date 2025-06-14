@@ -1,0 +1,22 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [nodejs-app, python-app]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies and run tests
+        run: |
+          cd ${{ matrix.app }}
+          if [ "${{ matrix.app }}" = "nodejs-app" ]; then
+            npm install && npm test
+          else
+            pip install -r requirements.txt && python test/test_main.py
+          fi
